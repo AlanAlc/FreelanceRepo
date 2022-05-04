@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="es-ES">
+<head><meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+<meta charset="UTF-8">
+      <!--Import Google Icon Font-->
+      <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+      <!--Import materialize.css-->
+      <link type="text/css" rel="stylesheet" href="materializeV1/materialize/css/materialize.min.css"  media="screen,projection"/>
+
+      <!--Let browser know website is optimized for mobile-->
+      <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+      
+      <link rel="icon" href="/images/Limitedge.jpg">
+      
+<style>
+
+</style>      
+<title>Desarrollo de software</title>
+</head>
+<body class="css-selector-background" style="background: linear-gradient(270deg, #032181, #000000);">
+      
+      <div class="row center-align">
+        <h4 class="white-text col s12 m6 offset-m3">Ejercicio de reclutamiento Angular</h4>  
+        <form class="col s12 m4 offset-m4">
+          <div class="row">
+            <div class="input-field col s12">
+              <input placeholder="Escribe un número" id="numero" type="text" class="validate white-text">
+            </div>
+            <a class="col s12 waves-effect waves-light btn" onclick="eval()">Evaluar</a>
+          </div>
+        </form>
+        <h5 id="resultado_verde" class="green-text col s12 m6 offset-m3"></h5> 
+        <h5 id="resultado_rojo" class="red-text col s12 m6 offset-m3"></h5> 
+        <h5 id="resultado_azul" class="blue-text col s12 m6 offset-m3"></h5> 
+      </div>
+      
+    <!-- The core Firebase JS SDK is always required and must be listed first -->
+    <script src="https://www.gstatic.com/firebasejs/6.2.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/6.2.0/firebase-database.js"></script>
+    <script src="kfb.js"></script>      
+    <script>
+        /**
+        * Funcion para calcular si el numero es multiplo
+        * utilizando el modulo de la division
+        */
+        function multiple(valor, multiple)
+        {
+            resto = valor % multiple;
+            if(resto==0)
+                return true;
+            else
+                return false;
+        }
+ 
+        function eval(){
+            
+            
+            // Arrays que contendran los valores multiples del 3 y del 5
+            var multiples_3=[];
+            var multiples_5=[];
+            var multiples_7=[];
+            var resultados =[];
+            
+            var valor = document.getElementById("numero").value;
+            console.log(valor);
+            // bucle del 1 al 100
+            for(var i=0;i<=valor;i++)
+            {
+                console.log(i);
+                if(multiple(i,3)){
+                    multiples_3.push(i);
+                    console.log(multiples_3);
+                    
+                }    
+                if(multiple(i,5)){
+                    if(!multiples_3.includes(i)){
+                        multiples_5.push(i);
+                        console.log(multiples_5);
+                        
+                    }
+                }    
+                if(multiple(i,7)){
+                    if(!multiples_3.includes(i) && !multiples_5.includes(i)){
+                        multiples_7.push(i);
+                        console.log(multiples_7);
+                        
+                    }
+                }     
+            }
+            resultados.push({"multiples_3":multiples_3});
+            resultados.push({"multiples_5":multiples_5});
+            resultados.push({"multiples_7":multiples_7});
+            
+            document.getElementById("resultado_verde").innerHTML = valor+",["+multiples_3+"]";
+            document.getElementById("resultado_rojo").innerHTML = valor+",["+multiples_5+"]";
+            document.getElementById("resultado_azul").innerHTML = valor+",["+multiples_7+"]";
+            document.getElementById("numero").value = "";
+            firebase.database().ref('peticiones').push({
+                numero: valor,
+                resultados: resultados
+            });
+        }
+        
+    </script>
+</body>
+</html>
